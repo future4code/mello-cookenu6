@@ -11,7 +11,9 @@ export const unfollowUser = async (req: Request, res: Response) => {
     if (!userToUnfollowId) {
       throw new Error("Verifique se os campos estão completos");
     }
-    const checkId = await new UserDatabase().userCheck(userToUnfollowId);
+
+    const userDatabase = new UserDatabase();
+    const checkId = await userDatabase.userCheck(userToUnfollowId);
 
     if (!checkId) {
       throw new Error(
@@ -33,6 +35,9 @@ export const unfollowUser = async (req: Request, res: Response) => {
       message: e.message,
     });
   } finally {
-    await FollowDatabase.destroyConnection();
+    await Promise.all([
+      FollowDatabase.destroyConnection(),
+      UserDatabase.destroyConnection(),
+    ]);
   }
 };

@@ -11,7 +11,9 @@ export const followUser = async (req: Request, res: Response) => {
     if (!userToFollowId) {
       throw new Error("Verifique se os campos estão completos");
     }
-    const checkId = await new UserDatabase().userCheck(userToFollowId);
+
+    const userDatabase = new UserDatabase();
+    const checkId = await userDatabase.userCheck(userToFollowId);
 
     if (!checkId) {
       throw new Error("id do usuário que se deseja seguir não encontrado");
@@ -31,6 +33,9 @@ export const followUser = async (req: Request, res: Response) => {
       message: e.message,
     });
   } finally {
-    await FollowDatabase.destroyConnection();
+    await Promise.all([
+      FollowDatabase.destroyConnection(),
+      UserDatabase.destroyConnection(),
+    ]);
   }
 };
