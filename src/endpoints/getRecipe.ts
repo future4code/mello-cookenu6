@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
-import { Authenticator } from "../services/Authenticator";
-import { RecipeDatabase } from "../data/RecipeDataBase";
+import { RecipeDatabase } from "../data/RecipeDatabase";
 import { BaseDatabase } from "../data/BaseDatabase";
 
 export const getRecipe = async (req: Request, res: Response) => {
