@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { IdGenerator } from "../services/IdGenerator";
-import { RecipeDatabase } from "../data/RecipeDataBase";
+import { RecipeDatabase } from "../data/RecipeDatabase";
 import { Authenticator } from "../services/Authenticator";
 import { BaseDatabase } from "../data/BaseDatabase";
 
