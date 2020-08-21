@@ -1,22 +1,25 @@
 import { Request, Response } from "express";
-import { Authenticator } from "../services/Authenticator";
 import { UserDatabase } from "../data/UserDatabase";
+import { Authenticator } from "../services/Authenticator";
 import { BaseDatabase } from "../data/BaseDatabase";
 
-export const getUserProfile = async (req: Request, res: Response) => {
+export const deleteUser = async (req: Request, res: Response) => {
   try {
+    const id = req.params.id;
     const token = req.headers.authorization as string;
 
     const authenticator = new Authenticator();
     const authenticationData = authenticator.getData(token);
 
-    const userDataBase = new UserDatabase();
-    const user = await userDataBase.getUserById(authenticationData.id);
+    const userDatabase = new UserDatabase();
+
+    if (authenticationData.id !== id && authenticationData.role !== "admin")
+      throw "Permission denied";
+
+    await userDatabase.deleteUser(id);
 
     res.status(200).send({
-      userName: user.name,
-      userEmail: user.email,
-      userId: user.id,
+      message: "User deleted!",
     });
   } catch (e) {
     res.status(400).send({

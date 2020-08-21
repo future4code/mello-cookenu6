@@ -7,7 +7,8 @@ export class UserDatabase extends BaseDatabase {
     id: string,
     name: string,
     email: string,
-    password: string
+    password: string,
+    role: string
   ): Promise<void> {
     await this.getConnection()
       .insert({
@@ -15,6 +16,7 @@ export class UserDatabase extends BaseDatabase {
         name,
         email,
         password,
+        role,
       })
       .into(UserDatabase.TABLE_NAME);
   }
@@ -40,6 +42,10 @@ export class UserDatabase extends BaseDatabase {
       .count("id as count")
       .from(UserDatabase.TABLE_NAME)
       .where({ id });
-    return result[0].count;
+    return Boolean(result[0].count);
+  }
+
+  public async deleteUser(id: string): Promise<void> {
+    await this.getConnection()(UserDatabase.TABLE_NAME).del().where({ id });
   }
 }
