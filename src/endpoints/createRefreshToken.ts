@@ -10,8 +10,9 @@ export const createRefreshToken = async (req: Request, res: Response) => {
 
     const authenticator = new Authenticator();
     const refreshTokenData = authenticator.getData(refreshToken);
+
     if (refreshTokenData.device !== device) {
-      throw new Error("Refresh token has no device");
+      throw new Error("Refresh token has different");
     }
 
     const userDataBase = new UserDatabase();

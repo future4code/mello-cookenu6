@@ -9,10 +9,7 @@ export class Authenticator {
 
   public getData(token: string): AuthenticationData {
     const data = jwt.verify(token, process.env.JWT_KEY as string) as any;
-    return {
-      id: data.id,
-      role: data.role,
-    };
+    return data;
   }
 }
 

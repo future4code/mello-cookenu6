@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { UserDatabase } from "../data/UserDatabase";
-import { Hash } from "crypto";
 import { HashManager } from "../services/HashManager";
 import { Authenticator } from "../services/Authenticator";
 import { BaseDatabase } from "../data/BaseDatabase";
