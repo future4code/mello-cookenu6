@@ -4,6 +4,7 @@ import { HashManager } from "../services/HashManager";
 import { UserDatabase } from "../data/UserDatabase";
 import { Authenticator } from "../services/Authenticator";
 import { BaseDatabase } from "../data/BaseDatabase";
+import { RefreshTokenDatabase } from "../data/RefreshTokenDatabase";
 
 export const signup = async (req: Request, res: Response) => {
   try {
@@ -11,6 +12,7 @@ export const signup = async (req: Request, res: Response) => {
     const email = req.body.email;
     const password = req.body.password;
     const role = req.body.role;
+    const device = req.body.device;
 
     if (!name || !email || !password) {
       throw new Error("Insert all required information");
@@ -34,11 +36,30 @@ export const signup = async (req: Request, res: Response) => {
     await userDatabase.createUser(id, name, email, hashPassword, role);
 
     const authenticator = new Authenticator();
-    const token = authenticator.generateToken({ id, role });
+    const accessToken = authenticator.generateToken(
+      { id, role },
+      process.env.ACCESS_TOKEN_EXPIRES_IN as string
+    );
+
+    const refreshToken = authenticator.generateToken(
+      {
+        id,
+        device,
+      },
+      process.env.REFRESH_TOKEN_EXPIRES_IN as string
+    );
+
+    const refreshTokenDatabase = new RefreshTokenDatabase();
+    await refreshTokenDatabase.createRefreshToken(
+      refreshToken,
+      device,
+      true,
+      id
+    );
 
     res.status(200).send({
       message: "User created successfully",
-      token,
+      accessToken,
     });
   } catch (e) {
     res.status(400).send({

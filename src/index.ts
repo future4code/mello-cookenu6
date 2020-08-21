@@ -12,6 +12,7 @@ import { followUser } from "./endpoints/followUser";
 import { getFeed } from "./endpoints/getFeed";
 import { deleteRecipe } from "./endpoints/deleteRecipe";
 import { deleteUser } from "./endpoints/deleteUser";
+import { createRefreshToken } from "./endpoints/createRefreshToken";
 
 dotenv.config();
 
@@ -29,6 +30,7 @@ app.get("/user/feed", getFeed);
 app.put("/recipe/:id/edit", editRecipe2);
 app.delete("/recipe/:id/delete", deleteRecipe);
 app.delete("/user/:id/delete", deleteUser);
+app.post("/user/refresh", createRefreshToken);
 
 const server = app.listen(process.env.PORT || 3003, () => {
   if (server) {
