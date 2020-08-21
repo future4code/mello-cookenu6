@@ -10,6 +10,7 @@ export const signup = async (req: Request, res: Response) => {
     const name = req.body.name;
     const email = req.body.email;
     const password = req.body.password;
+    const role = req.body.role;
 
     if (!name || !email || !password) {
       throw new Error("Insert all required information");
@@ -30,10 +31,10 @@ export const signup = async (req: Request, res: Response) => {
     const hashPassword = await hashManager.hash(password);
 
     const userDatabase = new UserDatabase();
-    await userDatabase.createUser(id, name, email, hashPassword);
+    await userDatabase.createUser(id, name, email, hashPassword, role);
 
     const authenticator = new Authenticator();
-    const token = authenticator.generateToken({ id });
+    const token = authenticator.generateToken({ id, role });
 
     res.status(200).send({
       message: "User created successfully",
@@ -41,7 +42,7 @@ export const signup = async (req: Request, res: Response) => {
     });
   } catch (e) {
     res.status(400).send({
-      message: e.message,
+      message: e.sqlMessage || e.message,
     });
   } finally {
     await BaseDatabase.destroyConnection();

@@ -20,7 +20,7 @@ export const getRecipe = async (req: Request, res: Response) => {
     });
   } catch (e) {
     res.status(400).send({
-      message: e.message,
+      message: e.sqlMessage || e.message,
     });
   } finally {
     await BaseDatabase.destroyConnection();

@@ -9,6 +9,7 @@ export const login = async (req: Request, res: Response) => {
   try {
     const email = req.body.email;
     const password = req.body.password;
+    const role = req.body.role;
 
     const userDataBase = new UserDatabase();
     const user = await userDataBase.getUserByEmail(email);
@@ -24,7 +25,7 @@ export const login = async (req: Request, res: Response) => {
     }
 
     const authenticator = new Authenticator();
-    const token = authenticator.generateToken({ id: user.id });
+    const token = authenticator.generateToken({ id: user.id, role: user.role });
 
     res.status(200).send({
       message: "User logged successfully",
@@ -32,7 +33,7 @@ export const login = async (req: Request, res: Response) => {
     });
   } catch (e) {
     res.status(400).send({
-      message: e.message,
+      message: e.sqlMessage || e.message,
     });
   } finally {
     await BaseDatabase.destroyConnection();

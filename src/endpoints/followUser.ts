@@ -30,7 +30,7 @@ export const followUser = async (req: Request, res: Response) => {
     });
   } catch (e) {
     res.status(400).send({
-      message: e.message,
+      message: e.sqlMessage || e.message,
     });
   } finally {
     await Promise.all([

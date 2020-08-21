@@ -1,22 +1,30 @@
 import { Request, Response } from "express";
+import { RecipeDatabase } from "../data/RecipeDatabase";
 import { Authenticator } from "../services/Authenticator";
-import { UserDatabase } from "../data/UserDatabase";
 import { BaseDatabase } from "../data/BaseDatabase";
 
-export const getUserProfile = async (req: Request, res: Response) => {
+export const deleteRecipe = async (req: Request, res: Response) => {
   try {
+    const id = req.params.id;
     const token = req.headers.authorization as string;
 
     const authenticator = new Authenticator();
     const authenticationData = authenticator.getData(token);
 
-    const userDataBase = new UserDatabase();
-    const user = await userDataBase.getUserById(authenticationData.id);
+    const recipeDatabase = new RecipeDatabase();
+
+    const isOwner: boolean = await recipeDatabase.checkRecipeOwnership(
+      id,
+      authenticationData.id
+    );
+
+    if (!isOwner && authenticationData.role !== "admin")
+      throw "Permission denied";
+
+    await recipeDatabase.deleteRecipe(id);
 
     res.status(200).send({
-      userName: user.name,
-      userEmail: user.email,
-      userId: user.id,
+      message: "Recipe deleted!",
     });
   } catch (e) {
     res.status(400).send({
