@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { RecipeDatabase } from "../data/RecipeDatabase";
 import { Authenticator } from "../services/Authenticator";
 import { BaseDatabase } from "../data/BaseDatabase";
+import { ForbiddenError } from "../errors/ForbiddenError";
 
 export const editRecipe2 = async (req: Request, res: Response) => {
   try {
@@ -24,7 +25,7 @@ export const editRecipe2 = async (req: Request, res: Response) => {
       authenticationData.id
     );
 
-    if (!isOwner) throw "Permission denied";
+    if (!isOwner) throw new ForbiddenError();
 
     await recipeDatabase.editRecipe2(id, title, description);
 
@@ -32,7 +33,7 @@ export const editRecipe2 = async (req: Request, res: Response) => {
       message: "Recipe updated!",
     });
   } catch (e) {
-    res.status(400).send({
+    res.status(e.statusCode || 400).send({
       message: e.sqlMessage || e.message,
     });
   } finally {

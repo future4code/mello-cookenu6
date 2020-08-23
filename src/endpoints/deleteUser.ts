@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { UserDatabase } from "../data/UserDatabase";
 import { Authenticator } from "../services/Authenticator";
 import { BaseDatabase } from "../data/BaseDatabase";
+import { ForbiddenError } from "../errors/ForbiddenError";
 
 export const deleteUser = async (req: Request, res: Response) => {
   try {
@@ -14,7 +15,7 @@ export const deleteUser = async (req: Request, res: Response) => {
     const userDatabase = new UserDatabase();
 
     if (authenticationData.id !== id && authenticationData.role !== "admin")
-      throw "Permission denied";
+      throw new ForbiddenError();
 
     await userDatabase.deleteUser(id);
 

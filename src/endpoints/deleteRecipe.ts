@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { RecipeDatabase } from "../data/RecipeDatabase";
 import { Authenticator } from "../services/Authenticator";
 import { BaseDatabase } from "../data/BaseDatabase";
+import { ForbiddenError } from "../errors/ForbiddenError";
 
 export const deleteRecipe = async (req: Request, res: Response) => {
   try {
@@ -19,7 +20,7 @@ export const deleteRecipe = async (req: Request, res: Response) => {
     );
 
     if (!isOwner && authenticationData.role !== "admin")
-      throw "Permission denied";
+      throw new ForbiddenError();
 
     await recipeDatabase.deleteRecipe(id);
 

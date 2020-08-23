@@ -5,6 +5,7 @@ import { Authenticator } from "../services/Authenticator";
 import { BaseDatabase } from "../data/BaseDatabase";
 import { RefreshTokenDatabase } from "../data/RefreshTokenDatabase";
 import { InvalidEmailError } from "../errors/InvalidEmailError";
+import { InvalidBodyError } from "../errors/InvalidBodyError";
 
 export const login = async (req: Request, res: Response) => {
   try {
@@ -12,11 +13,13 @@ export const login = async (req: Request, res: Response) => {
     const password = req.body.password;
     const device = req.body.device;
 
+    if (!email || !password || !device) throw new InvalidBodyError();
+
     const userDataBase = new UserDatabase();
     const user = await userDataBase.getUserByEmail(email);
 
     if (!user) {
-      throw new InvalidEmailError("Email error");
+      throw new InvalidEmailError();
     }
 
     const hashManager = new HashManager();
@@ -61,7 +64,7 @@ export const login = async (req: Request, res: Response) => {
       refreshToken,
     });
   } catch (e) {
-    res.status(e.statusCodes || 400).send({
+    res.status(e.statusCode || 400).send({
       message: e.sqlMessage || e.message,
     });
   } finally {
