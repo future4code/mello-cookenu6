@@ -34,6 +34,7 @@ export class FollowDatabase extends BaseDatabase {
 	    JOIN Recipes r ON r.user_id = u.id
     WHERE 
 	    f.user_id = '${user_id}'
+    ORDER BY r.creation_date DESC
     `);
     return response[0];
   }
