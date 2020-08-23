@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { Authenticator } from "../services/Authenticator";
 import { FollowDatabase } from "../data/FollowDatabase";
+import { BaseDatabase } from "../data/BaseDatabase";
 
 export const getFeed = async (req: Request, res: Response) => {
   try {
@@ -29,6 +30,6 @@ export const getFeed = async (req: Request, res: Response) => {
       message: e.sqlMessage || e.message,
     });
   } finally {
-    await FollowDatabase.destroyConnection();
+    await BaseDatabase.destroyConnection();
   }
 };

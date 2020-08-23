@@ -57,6 +57,6 @@ CREATE TABLE Refresh_Token (
     device VARCHAR(255) NOT NULL,
     is_active BOOLEAN NOT NULL,
     user_id VARCHAR(255) NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES Users(id)
+    FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE
 );
 ```
