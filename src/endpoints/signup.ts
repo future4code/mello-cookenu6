@@ -63,6 +63,7 @@ export const signup = async (req: Request, res: Response) => {
     res.status(200).send({
       message: "User created successfully",
       accessToken,
+      refreshToken,
     });
   } catch (e) {
     res.status(e.statusCode || 400).send({

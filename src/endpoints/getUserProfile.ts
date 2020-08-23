@@ -13,11 +13,7 @@ export const getUserProfile = async (req: Request, res: Response) => {
     const userDataBase = new UserDatabase();
     const user = await userDataBase.getUserById(authenticationData.id);
 
-    res.status(200).send({
-      userName: user.name,
-      userEmail: user.email,
-      userId: user.id,
-    });
+    res.status(200).send(user);
   } catch (e) {
     res.status(400).send({
       message: e.sqlMessage || e.message,
