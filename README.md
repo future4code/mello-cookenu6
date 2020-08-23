@@ -53,7 +53,7 @@ CREATE TABLE Follow_Relation (
 
 ```sql
 CREATE TABLE Refresh_Token (
-    token VARCHAR(255) NOT NULL,
+    refresh_token VARCHAR(255) PRIMARY KEY,
     device VARCHAR(255) NOT NULL,
     is_active BOOLEAN NOT NULL,
     user_id VARCHAR(255) NOT NULL,
