@@ -28,7 +28,7 @@ CREATE TABLE Recipes (
     title VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,
     user_id VARCHAR(255) NOT NULL,
-    creation_date DATE DEFAULT (current_date),
+    creation_date DATE DEFAULT (CURRENT_DATE),
     FOREIGN KEY (user_id) REFERENCES Users (id) ON DELETE CASCADE
 );
 ```
@@ -39,11 +39,11 @@ CREATE TABLE Recipes (
 
 ```sql
 CREATE TABLE Follow_Relation (
-	user_id VARCHAR(255) NOT NULL,
-	follow_id VARCHAR(255) NOT NULL,
+    user_id VARCHAR(255) NOT NULL,
+    follow_id VARCHAR(255) NOT NULL,
     PRIMARY KEY (user_id, follow_id),
-	FOREIGN KEY (user_id) REFERENCES  Users(id) ON DELETE CASCADE,
-	FOREIGN KEY (followed_id) REFERENCES Users(id) ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES  Users(id) ON DELETE CASCADE,
+    FOREIGN KEY (followed_id) REFERENCES Users(id) ON DELETE CASCADE
 );
 ```
 
@@ -53,7 +53,7 @@ CREATE TABLE Follow_Relation (
 
 ```sql
 CREATE TABLE Refresh_Token (
-	token VARCHAR(255) NOT NULL,
+    token VARCHAR(255) NOT NULL,
     device VARCHAR(255) NOT NULL,
     is_active BOOLEAN NOT NULL,
     user_id VARCHAR(255) NOT NULL,
