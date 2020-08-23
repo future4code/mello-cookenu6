@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { Authenticator } from "../services/Authenticator";
 import { FollowDatabase } from "../data/FollowDatabase";
 import { UserDatabase } from "../data/UserDatabase";
+import { BaseDatabase } from "../data/BaseDatabase";
 
 export const followUser = async (req: Request, res: Response) => {
   try {
@@ -33,9 +34,6 @@ export const followUser = async (req: Request, res: Response) => {
       message: e.sqlMessage || e.message,
     });
   } finally {
-    await Promise.all([
-      FollowDatabase.destroyConnection(),
-      UserDatabase.destroyConnection(),
-    ]);
+    await BaseDatabase.destroyConnection();
   }
 };
