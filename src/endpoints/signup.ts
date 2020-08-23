@@ -5,6 +5,9 @@ import { UserDatabase } from "../data/UserDatabase";
 import { Authenticator } from "../services/Authenticator";
 import { BaseDatabase } from "../data/BaseDatabase";
 import { RefreshTokenDatabase } from "../data/RefreshTokenDatabase";
+import { InvalidBodyError } from "../errors/InvalidBodyError";
+import { InvalidEmailError } from "../errors/InvalidEmailError";
+import { InvalidPasswordError } from "../errors/InvalidPasswordError";
 
 export const signup = async (req: Request, res: Response) => {
   try {
@@ -15,15 +18,15 @@ export const signup = async (req: Request, res: Response) => {
     const device = req.body.device;
 
     if (!name || !email || !password) {
-      throw new Error("Insert all required information");
+      throw new InvalidBodyError();
     }
 
     if (email.indexOf("@") === -1) {
-      throw new Error("Invalid email");
+      throw new InvalidEmailError();
     }
 
     if (password.length < 6) {
-      throw new Error("A senha deve conter no mínimo 6 caracteres");
+      throw new InvalidPasswordError();
     }
 
     const idGenerator = new IdGenerator();
@@ -62,7 +65,7 @@ export const signup = async (req: Request, res: Response) => {
       accessToken,
     });
   } catch (e) {
-    res.status(400).send({
+    res.status(e.statusCode || 400).send({
       message: e.sqlMessage || e.message,
     });
   } finally {

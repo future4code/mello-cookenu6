@@ -3,6 +3,8 @@ import { IdGenerator } from "../services/IdGenerator";
 import { RecipeDatabase } from "../data/RecipeDatabase";
 import { Authenticator } from "../services/Authenticator";
 import { BaseDatabase } from "../data/BaseDatabase";
+import { UnauthorizedError } from "../errors/UnauthorizedError";
+import { InvalidBodyError } from "../errors/InvalidBodyError";
 
 export const createRecipe = async (req: Request, res: Response) => {
   try {
@@ -10,8 +12,10 @@ export const createRecipe = async (req: Request, res: Response) => {
     const description = req.body.description;
     const token = req.headers.authorization as string;
 
+    if (!token) throw new UnauthorizedError();
+
     if (!title || !description) {
-      throw new Error("Insert all required information");
+      throw new InvalidBodyError();
     }
 
     const idGenerator = new IdGenerator();
