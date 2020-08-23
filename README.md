@@ -29,7 +29,7 @@ CREATE TABLE Recipes (
     description TEXT NOT NULL,
     user_id VARCHAR(255) NOT NULL,
     creation_date DATE DEFAULT (CURRENT_DATE),
-    FOREIGN KEY (user_id) REFERENCES Users (id) ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE
 );
 ```
 
