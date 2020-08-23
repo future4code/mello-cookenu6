@@ -9,22 +9,20 @@ export class RefreshTokenDatabase extends BaseDatabase {
     isActive: boolean,
     userId: string
   ): Promise<void> {
-    await this.getConnection()
-      .insert({
-        refresh_token: token,
-        device,
-        is_active: Boolean(isActive),
-        user_id: userId,
-      })
-      .into(RefreshTokenDatabase.TABLE_NAME);
+    await this.getConnection()(RefreshTokenDatabase.TABLE_NAME).insert({
+      refresh_token: token,
+      device,
+      is_active: isActive,
+      user_id: userId,
+    });
   }
 
   public async getRefreshToken(token: string): Promise<any> {
-    const result = await this.getConnection().raw(`
-        SELECT * FROM ${RefreshTokenDatabase.TABLE_NAME}
-        WHERE refresh_token = '${token}`);
+    const result = await this.getConnection()(RefreshTokenDatabase.TABLE_NAME)
+      .select()
+      .where({ refresh_token: token });
 
-    const retrievedToken = result[0][0];
+    const retrievedToken = result[0];
 
     return {
       token: retrievedToken.refresh_token,
@@ -32,5 +30,11 @@ export class RefreshTokenDatabase extends BaseDatabase {
       isActive: Boolean(retrievedToken.is_active),
       userId: retrievedToken.user_id,
     };
+  }
+
+  public async revokeRefreshToken(userId: string): Promise<void> {
+    await this.getConnection()(RefreshTokenDatabase.TABLE_NAME)
+      .update({ is_active: false })
+      .where({ user_id: userId });
   }
 }

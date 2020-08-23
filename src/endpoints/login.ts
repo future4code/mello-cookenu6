@@ -4,6 +4,7 @@ import { HashManager } from "../services/HashManager";
 import { Authenticator } from "../services/Authenticator";
 import { BaseDatabase } from "../data/BaseDatabase";
 import { RefreshTokenDatabase } from "../data/RefreshTokenDatabase";
+import { InvalidEmailError } from "../errors/InvalidEmailError";
 
 export const login = async (req: Request, res: Response) => {
   try {
@@ -13,6 +14,10 @@ export const login = async (req: Request, res: Response) => {
 
     const userDataBase = new UserDatabase();
     const user = await userDataBase.getUserByEmail(email);
+
+    if (!user) {
+      throw new InvalidEmailError("Email error");
+    }
 
     const hashManager = new HashManager();
     const isPasswordCorrect = await hashManager.compare(
@@ -42,6 +47,7 @@ export const login = async (req: Request, res: Response) => {
     );
 
     const refreshTokenDatabase = new RefreshTokenDatabase();
+    await refreshTokenDatabase.revokeRefreshToken(user.id);
     await refreshTokenDatabase.createRefreshToken(
       refreshToken,
       device,
@@ -55,7 +61,7 @@ export const login = async (req: Request, res: Response) => {
       refreshToken,
     });
   } catch (e) {
-    res.status(400).send({
+    res.status(e.statusCodes || 400).send({
       message: e.sqlMessage || e.message,
     });
   } finally {
