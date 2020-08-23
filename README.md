@@ -43,7 +43,7 @@ CREATE TABLE Follow_Relation (
     follow_id VARCHAR(255) NOT NULL,
     PRIMARY KEY (user_id, follow_id),
     FOREIGN KEY (user_id) REFERENCES  Users(id) ON DELETE CASCADE,
-    FOREIGN KEY (followed_id) REFERENCES Users(id) ON DELETE CASCADE
+    FOREIGN KEY (follow_id) REFERENCES Users(id) ON DELETE CASCADE
 );
 ```
 
