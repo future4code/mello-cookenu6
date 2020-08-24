@@ -32,9 +32,9 @@ export class RefreshTokenDatabase extends BaseDatabase {
     };
   }
 
-  public async revokeRefreshToken(userId: string): Promise<void> {
+  public async revokeRefreshToken(token: string): Promise<void> {
     await this.getConnection()(RefreshTokenDatabase.TABLE_NAME)
       .update({ is_active: false })
-      .where({ user_id: userId });
+      .where({ refresh_token: token });
   }
 }
